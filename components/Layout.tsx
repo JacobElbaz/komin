@@ -14,7 +14,7 @@ const Layout = () => {
         <Stack.Navigator>
             <Stack.Screen name='NavBar' component={NavBar} options={{headerShown: false}}/>
             <Stack.Screen name='Edit Profile' component={EditProfile} />
-            <Stack.Screen name='Chat' component={Chat} options={({ route }) => ({ title: route.params.name })} /> 
+            <Stack.Screen name='Chat' component={Chat} options={{headerShown: false}} /> 
             <Stack.Screen name='Global Chat' component={ChatRoom} /> 
             <Stack.Screen name='Add a new post' component={Post} /> 
         </Stack.Navigator>

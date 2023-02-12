@@ -2,16 +2,17 @@ import { useNavigation } from '@react-navigation/native'
 import React from 'react'
 import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import pic from '../assets/icon.png'
 
 const Conversation = ({ contact }: any) => {
     
     type Nav = {
-        navigate: (value: string) => void;
+        navigate: (value: string, params: any) => void;
     }
 
     const navigation = useNavigation<Nav>(); 
     return (
-        <TouchableOpacity style={styles.container} onPress={() => {navigation.navigate('Chat')}}>
+        <TouchableOpacity style={styles.container} onPress={() => navigation.navigate('Chat', contact)}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Image source={contact.picture} style={styles.image}></Image>
                 <Text style={styles.text}>{contact.name}</Text>

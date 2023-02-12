@@ -1,11 +1,11 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 
-const BubbleMessage = ({ mine, text } : any) => {
+const BubbleMessage = ({ mine, text, sender } : any) => {
     return (
         <View style={[styles.message, mine ? styles.mine : styles.not_mine]}>
             <View style={[styles.cloud, {backgroundColor: mine ? '#e32f45' : 'white'}]}>
-                <Text style={{color: '#E7E7E7'}}>sender:</Text>
+                <Text style={{color: '#E7E7E7'}}>{mine ? 'Me:' : sender}</Text>
                 <Text style={[ styles.text, { color: mine ? 'white' : 'black'} ]}> {text} </Text>
             </View>
         </View>
