@@ -1,60 +1,157 @@
-import React from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
+import CustomInput from '../components/CustomInput';
+import CustomButton from '../components/CustomButton';
+import SocialSignInButtons from '../components/SocialSignInButtons';
+import { useNavigation } from '@react-navigation/core';
+import { useForm } from 'react-hook-form';
+import axios from 'axios'
+
+const EMAIL_REGEX =
+    /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
 const Signup = () => {
-
-    const [user, setUser] = React.useState('')
-    const onChangeText = (e: any) => {
-        setUser(e.target.value)
+    const { control, handleSubmit, watch } = useForm();
+    const pwd = watch('password');
+    const [loading, setLoading] = useState(false);
+    type Nav = {
+        navigate: (value: string, params: any) => void;
     }
+    const navigation = useNavigation<Nav>();
+
+    const onRegisterPressed = async (data: any) => {
+        if (loading) {
+            return;
+        }
+
+        setLoading(true);
+        const { username, password, email, name } = data;
+        try {
+           const response = await axios({
+            method: 'post',
+            url: 'http://192.168.1.15:3000/auth/register',
+            data: {
+                'email': email,
+                'password': password
+            }
+           })
+        } catch (e : any) {
+            Alert.alert('Oops', e.message);
+        }
+        setLoading(false);
+        Alert.alert('Successful', 'Thanks for your registration !')
+        navigation.navigate('Login', null)
+    };
+
+    const onSignInPress = () => {
+        navigation.navigate('Login', null);
+    };
 
     return (
-        <View>
-            <View>
-                <Text style={styles.h1}>Signup</Text>
-                <View>
-                    <Text style={styles.label}>Username</Text>
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={onChangeText}
-                        value={'Username'}
-                    />
-                    <Text style={styles.label}>Email</Text>
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={onChangeText}
-                        value={'Email'}
-                    />
-                    <Text style={styles.label}>Password</Text>
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={onChangeText}
-                        value={'Password'}
-                    />
-                </View>
-                <Pressable style={styles.button}>
-                    <Text>SIGNUP</Text>
-                </Pressable>
+        <ScrollView showsVerticalScrollIndicator={false}>
+            <View style={styles.root}>
+                <Text style={styles.title}>Create an account</Text>
+
+                <CustomInput
+                    name="name"
+                    control={control}
+                    placeholder="Name"
+                    rules={{
+                        required: 'Name is required',
+                        minLength: {
+                            value: 3,
+                            message: 'Name should be at least 3 characters long',
+                        },
+                        maxLength: {
+                            value: 24,
+                            message: 'Name should be max 24 characters long',
+                        },
+                    }}
+                />
+
+                <CustomInput
+                    name="username"
+                    control={control}
+                    placeholder="Username"
+                    rules={{
+                        required: 'Username is required',
+                        minLength: {
+                            value: 3,
+                            message: 'Username should be at least 3 characters long',
+                        },
+                        maxLength: {
+                            value: 24,
+                            message: 'Username should be max 24 characters long',
+                        },
+                    }}
+                />
+                <CustomInput
+                    name="email"
+                    control={control}
+                    placeholder="Email"
+                    rules={{
+                        required: 'Email is required',
+                        pattern: { value: EMAIL_REGEX, message: 'Email is invalid' },
+                    }}
+                />
+                <CustomInput
+                    name="password"
+                    control={control}
+                    placeholder="Password"
+                    secureTextEntry
+                    rules={{
+                        required: 'Password is required',
+                        minLength: {
+                            value: 8,
+                            message: 'Password should be at least 8 characters long',
+                        },
+                    }}
+                />
+                <CustomInput
+                    name="password-repeat"
+                    control={control}
+                    placeholder="Repeat Password"
+                    secureTextEntry
+                    rules={{
+                        validate: (value: any) => value === pwd || 'Password do not match',
+                    }}
+                />
+
+                <CustomButton
+                    text={loading ? 'Loading...' :"Register"}
+                    onPress={handleSubmit(onRegisterPressed)}
+                />
+
+                <SocialSignInButtons />
+
+                <CustomButton
+                    text="Have an account? Sign in"
+                    onPress={onSignInPress}
+                    type="TERTIARY"
+                />
             </View>
-        </View>
+        </ScrollView>
     );
-}
+};
 
 const styles = StyleSheet.create({
-    h1: {
-        fontSize: 30,
-        color: 'black'
+    root: {
+        alignItems: 'center',
+        padding: 20,
     },
-    label: {
-        fontSize: 15,
-        color: 'grey'
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#051C60',
+        margin: 10,
     },
-    input: {
-        borderRadius: 15,
+    text: {
+        color: 'gray',
+        marginVertical: 10,
     },
-    button: {
-        backgroundColor: 'blue'
-    }
-})
+    link: {
+        color: '#FDB075',
+    },
+});
 
 export default Signup;

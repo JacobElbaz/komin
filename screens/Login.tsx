@@ -1,159 +1,124 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-    StyleSheet,
-    Text,
     View,
+    Text,
+    Image,
+    StyleSheet,
+    useWindowDimensions,
+    ScrollView,
     TextInput,
-    SafeAreaView,
-    TouchableOpacity,
+    Alert,
 } from 'react-native';
+import Logo from '../assets/icon.png'
+import CustomInput from '../components/CustomInput';
+import CustomButton from '../components/CustomButton';
+import SocialSignInButtons from '../components/SocialSignInButtons';
 import { useNavigation } from '@react-navigation/native';
+import { useForm, Controller } from 'react-hook-form';
+import axios from 'axios';
+
+type Inputs = {
+    example: string,
+    exampleRequired: string,
+};
 
 const Login = () => {
+    const { height } = useWindowDimensions();
+    const [loading, setLoading] = useState(false);
     type Nav = {
         navigate: (value: string) => void;
     }
-
     const navigation = useNavigation<Nav>();
+    const {
+        control,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<Inputs>();
+
+    const onSignInPressed = async (data: any) => {
+        if (loading) {
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const response = await axios({
+                method: 'post',
+                url: 'http://192.168.1.15:3000/auth/login',
+                data: {
+                    'email': data.username,
+                    'password': data.password
+                }
+            });
+            console.log(response);
+        } catch (e: any) {
+            Alert.alert('Oops', e.message);
+        }
+        setLoading(false);
+        navigation.navigate('Layout')
+    };
+
+    const onSignUpPress = () => {
+        navigation.navigate('Signup');
+    };
 
     return (
-        <SafeAreaView style={styles.main}>
-            <View style={styles.container}>
-                <View style={styles.wFull}>
-                    <View style={styles.row}>
-                        <Text style={styles.brandName}>Komin</Text>
-                    </View>
+        <ScrollView showsVerticalScrollIndicator={false}>
+            <View style={styles.root}>
+                <Image
+                    source={Logo}
+                    style={[styles.logo, { height: height * 0.3 }]}
+                    resizeMode="contain"
+                />
 
-                    <Text style={styles.loginContinueTxt}>Login in to continue</Text>
-                    <TextInput style={styles.input} placeholder="Email" />
-                    <TextInput style={styles.input} placeholder="Password" />
+                <CustomInput
+                    name="username"
+                    placeholder="Username"
+                    control={control}
+                    rules={{ required: 'Username is required' }}
+                />
 
-                    <View style={styles.loginBtnWrapper}>
-                        {/******************** LOGIN BUTTON *********************/}
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate('Layout')}
-                            activeOpacity={0.7}
-                            style={styles.loginBtn}>
-                            <Text style={styles.loginText}>Log In</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
+                <CustomInput
+                    name="password"
+                    placeholder="Password"
+                    secureTextEntry
+                    control={control}
+                    rules={{
+                        required: 'Password is required',
+                        minLength: {
+                            value: 3,
+                            message: 'Password should be minimum 3 characters long',
+                        },
+                    }}
+                />
 
-                <View style={styles.footer}>
-                    <Text style={styles.footerText}> Don't have an account? </Text>
-                    {/******************** REGISTER BUTTON *********************/}
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate('Signup')}>
-                        <Text style={styles.signupBtn}>Sign Up</Text>
-                    </TouchableOpacity>
-                </View>
+                <CustomButton
+                    text={loading ? 'Loading...' : 'Sign In'}
+                    onPress={handleSubmit(onSignInPressed)}
+                />
+
+                <SocialSignInButtons />
+
+                <CustomButton
+                    text="Don't have an account? Create one"
+                    onPress={onSignUpPress}
+                    type="TERTIARY"
+                />
             </View>
-        </SafeAreaView>
+        </ScrollView>
     );
 };
 
-export default Login;
-
 const styles = StyleSheet.create({
-    main: {
-        flex: 1,
-        justifyContent: 'center',
+    root: {
         alignItems: 'center',
-        padding: 16,
+        padding: 20,
     },
-    container: {
-        padding: 15,
-        width: '100%',
-        position: 'relative',
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    brandName: {
-        fontSize: 42,
-        textAlign: 'center',
-        fontWeight: 'bold',
-        color: 'blue',
-        opacity: 0.9,
-    },
-    loginContinueTxt: {
-        fontSize: 21,
-        textAlign: 'center',
-        color: 'gray',
-        marginBottom: 16,
-        fontWeight: 'bold',
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: 'gray',
-        padding: 15,
-        marginVertical: 10,
-        borderRadius: 5,
-        height: 55,
-        paddingVertical: 0,
-    },
-    // Login Btn Styles
-    loginBtnWrapper: {
-        height: 55,
-        marginTop: 12,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.4,
-        shadowRadius: 3,
-        elevation: 5,
-    },
-    linearGradient: {
-        width: '100%',
-        borderRadius: 50,
-    },
-    loginBtn: {
-        textAlign: 'center',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-        height: 55,
-        backgroundColor: 'blue'
-    },
-    loginText: {
-        color: 'white',
-        fontSize: 16,
-        fontWeight: '400',
-    },
-    forgotPassText: {
-        color: 'blue',
-        textAlign: 'center',
-        fontWeight: 'bold',
-        marginTop: 15,
-    },
-    // footer
-    footer: {
-        position: 'absolute',
-        bottom: 20,
-        textAlign: 'center',
-        flexDirection: 'row',
-    },
-    footerText: {
-        color: 'gray',
-        fontWeight: 'bold',
-    },
-    signupBtn: {
-        color: 'blue',
-        fontWeight: 'bold',
-    },
-    // utils
-    wFull: {
-        width: '100%',
-    },
-    row: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: 20,
-    },
-    mr7: {
-        marginRight: 7,
+    logo: {
+        width: '70%',
+        maxWidth: 300,
+        maxHeight: 200,
     },
 });
+
+export default Login;
