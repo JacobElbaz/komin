@@ -3,7 +3,7 @@ import React from 'react'
 import Chat from '../screens/Chat';
 import ChatRoom from '../screens/ChatRoom';
 import EditProfile from '../screens/EditProfile';
-import Post from '../screens/Post';
+import Post from '../screens/AddPost';
 import NavBar from './NavBar';
 
 

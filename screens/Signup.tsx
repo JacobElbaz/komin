@@ -6,6 +6,7 @@ import SocialSignInButtons from '../components/SocialSignInButtons';
 import { useNavigation } from '@react-navigation/core';
 import { useForm } from 'react-hook-form';
 import axios from 'axios'
+import { UserContext } from '../components/UserContext';
 
 const EMAIL_REGEX =
     /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -18,26 +19,15 @@ const Signup = () => {
         navigate: (value: string, params: any) => void;
     }
     const navigation = useNavigation<Nav>();
+    const {register} = React.useContext(UserContext)
 
     const onRegisterPressed = async (data: any) => {
         if (loading) {
             return;
         }
-
         setLoading(true);
-        const { username, password, email, name } = data;
-        try {
-           const response = await axios({
-            method: 'post',
-            url: 'http://192.168.1.15:3000/auth/register',
-            data: {
-                'email': email,
-                'password': password
-            }
-           })
-        } catch (e : any) {
-            Alert.alert('Oops', e.message);
-        }
+        const { password, email, name } = data;
+        register(name, email, password);
         setLoading(false);
         Alert.alert('Successful', 'Thanks for your registration !')
         navigation.navigate('Login', null)
@@ -69,22 +59,6 @@ const Signup = () => {
                     }}
                 />
 
-                <CustomInput
-                    name="username"
-                    control={control}
-                    placeholder="Username"
-                    rules={{
-                        required: 'Username is required',
-                        minLength: {
-                            value: 3,
-                            message: 'Username should be at least 3 characters long',
-                        },
-                        maxLength: {
-                            value: 24,
-                            message: 'Username should be max 24 characters long',
-                        },
-                    }}
-                />
                 <CustomInput
                     name="email"
                     control={control}

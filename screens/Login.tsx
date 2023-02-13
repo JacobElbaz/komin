@@ -1,21 +1,18 @@
 import React, { useState } from 'react';
 import {
     View,
-    Text,
     Image,
     StyleSheet,
     useWindowDimensions,
     ScrollView,
-    TextInput,
-    Alert,
 } from 'react-native';
 import Logo from '../assets/icon.png'
 import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
 import SocialSignInButtons from '../components/SocialSignInButtons';
 import { useNavigation } from '@react-navigation/native';
-import { useForm, Controller } from 'react-hook-form';
-import axios from 'axios';
+import { useForm } from 'react-hook-form';
+import { UserContext } from '../components/UserContext';
 
 type Inputs = {
     example: string,
@@ -34,6 +31,7 @@ const Login = () => {
         handleSubmit,
         formState: { errors },
     } = useForm<Inputs>();
+    const {login} = React.useContext(UserContext)
 
     const onSignInPressed = async (data: any) => {
         if (loading) {
@@ -41,21 +39,8 @@ const Login = () => {
         }
 
         setLoading(true);
-        try {
-            const response = await axios({
-                method: 'post',
-                url: 'http://192.168.1.15:3000/auth/login',
-                data: {
-                    'email': data.username,
-                    'password': data.password
-                }
-            });
-            console.log(response);
-        } catch (e: any) {
-            Alert.alert('Oops', e.message);
-        }
+        login(data.email, data.password);
         setLoading(false);
-        navigation.navigate('Layout')
     };
 
     const onSignUpPress = () => {
@@ -72,10 +57,10 @@ const Login = () => {
                 />
 
                 <CustomInput
-                    name="username"
-                    placeholder="Username"
+                    name="email"
+                    placeholder="Email"
                     control={control}
-                    rules={{ required: 'Username is required' }}
+                    rules={{ required: 'User email is required' }}
                 />
 
                 <CustomInput

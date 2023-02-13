@@ -2,9 +2,12 @@ import { View, ScrollView, StyleSheet, Image, Text, TouchableOpacity } from "rea
 import Post from '../components/Post';
 import pic from '../assets/icon.png'
 import { useNavigation } from "@react-navigation/native";
+import React from "react";
+import { UserContext } from "../components/UserContext";
 
 const Profile = () => {
-
+    const {userInfo} = React.useContext(UserContext)
+    
     type Nav = {
         navigate: (value: string) => void;
     }
@@ -19,7 +22,7 @@ const Profile = () => {
                         source={pic}
                         style={styles.profilePic} />
                     <View style={styles.edit}>
-                        <Text style={styles.userName}>Jacob Elbaz</Text>
+                        <Text style={styles.userName}>{userInfo.name}</Text>
                         <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('Edit Profile')}>
                             <Text style={{color: '#ffff'}}>Edit Profile</Text>
                         </TouchableOpacity>

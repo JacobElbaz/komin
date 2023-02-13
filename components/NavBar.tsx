@@ -4,7 +4,7 @@ import Home from '../screens/Home';
 import Conversations from '../screens/Conversations';
 import Profile from '../screens/Profile';
 import ChatRoom from '../screens/ChatRoom';
-import Post from '../screens/Post';
+import Post from '../screens/AddPost';
 import Icon from 'react-native-vector-icons/Ionicons'
 import IconA from 'react-native-vector-icons/FontAwesome5'
 import { useNavigation } from '@react-navigation/native'
