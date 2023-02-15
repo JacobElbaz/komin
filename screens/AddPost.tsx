@@ -8,25 +8,32 @@ import axios from "axios";
 import { UserContext } from "../components/UserContext";
 import FormData from 'form-data'
 import { IP } from "../ip";
+import { create } from 'apisauce'
+
+const apiClient = create({
+    baseURL: `http://${IP}:3000`,
+    headers: { Accept: 'application/vnd.github.v3+json' },
+})
 
 const uploadImage = async (imageURI: String) => {
     var body = new FormData();
     body.append('file', { name: "name", type: 'image/jpeg', uri: imageURI });
     try {
-        const res = await axios.post(`http://${IP}:3000/file/file`, body)
-        console.log("save passed");
-        const url = res.data
-        console.log("got res: " + res.data[url]);
-        return url
+        const res = await apiClient.post('/file/file', body)
+        if (!res.ok) {
+            console.log("save failed " + res.problem)
+        } else {
+            if (res.data) {
+                const d: any = res.data
+                console.log("----= url:" + d.url)
+                return d.url
+            }
+        }
     } catch (err) {
-        console.log("save failed" + err);
+        console.log("save failed " + err)
     }
-    return "url"
+    return ""
 }
-type Inputs = {
-    example: string,
-    exampleRequired: string,
-};
 
 const AddPost = () => {
     const [loading, setLoading] = React.useState(false);
@@ -37,8 +44,7 @@ const AddPost = () => {
             mediaTypes: MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [4, 3],
-            quality: 1,
-            base64: true
+            quality: 1
         });
         if (response) {
             setPhoto(response.assets[0]);
@@ -57,29 +63,30 @@ const AddPost = () => {
         }
         setLoading(true);
         console.log(photo.uri);
-        
+
         const url = await uploadImage(photo.uri)
         console.log(url);
         const body = {
             'message': data.message,
-            'sender': userInfo.id,
+            'senderId': userInfo.id,
+            'senderName': userInfo.name,
             'photo': url
         }
-        if (body.photo != 'url'){
-        await axios.post(`http://${IP}:3000/post`, body, {
-            headers: {
-                'Authorization': `JWT ${userInfo.accessToken}`
-            }
-        })
-            .then(res => {
-                let userInfo = res.data;
-                console.log(`userInfo: ${userInfo}`);
+        if (body.photo != '') {
+            await axios.post(`http://${IP}:3000/post`, body, {
+                headers: {
+                    'Authorization': `JWT ${userInfo.accessToken}`
+                }
             })
-            .catch(e => {
-                console.log(`add post error ${e}`);
-            });
+                .then(res => {
+                    let userInfo = res.data;
+                    console.log(`userInfo: ${userInfo}`);
+                })
+                .catch(e => {
+                    console.log(`add post error ${e}`);
+                });
         } else console.log('not posting');
-        
+
         setLoading(false);
     };
     return (
@@ -93,7 +100,7 @@ const AddPost = () => {
             {photo && (
                 <>
                     <Image
-                        source={{ uri: 'data:image/jpeg;base64,' + photo.base64 }}
+                        source={{ uri: photo.uri }}
                         style={{ width: 300, height: 300 }}
                     />
                 </>

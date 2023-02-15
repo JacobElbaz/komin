@@ -1,12 +1,13 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
 import Icon from 'react-native-vector-icons/Entypo';
+import pic from '../assets/icon.png'
 
 const Post = ({ user, image, text }: any) => {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <Image
-                    source={user.picture}
+                    source={user.picture ? {uri: user.picture} : pic}
                     style={styles.profilePic} />
                 <Text style={styles.userName}>{user.name}</Text>
             </View>
@@ -17,7 +18,7 @@ const Post = ({ user, image, text }: any) => {
                 <Text>{text}</Text>
             </View>
             <View>
-                <Image source={image}
+                <Image source={{uri: image}}
                     style={styles.image} />
             </View>
         </View >
