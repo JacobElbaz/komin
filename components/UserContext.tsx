@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import React, {createContext, useEffect, useState} from 'react';
+import { IP } from '../ip';
 
 export const UserContext = createContext({});
 
@@ -13,7 +14,7 @@ export const Context = ({children} : any) => {
     setIsLoading(true);
 
     axios
-      .post('http://192.168.1.15:3000/auth/register', {
+      .post(`http://${IP}:3000/auth/register`, {
         name,
         email,
         password,
@@ -35,7 +36,7 @@ export const Context = ({children} : any) => {
     setIsLoading(true);
 
     axios
-      .post('http://192.168.1.15:3000/auth/login', {
+      .post(`http://${IP}:3000/auth/login`, {
         email,
         password,
       })
@@ -57,7 +58,7 @@ export const Context = ({children} : any) => {
 
     axios
       .get(
-        'http://192.168.1.15:3000/auth/logout',
+        `http://${IP}:3000/auth/logout`,
         {
           headers: {'Authorization': `JWT ${userInfo.refreshToken}`},
         },

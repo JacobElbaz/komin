@@ -6,6 +6,23 @@ import CustomButton from "../components/CustomButton";
 import { launchImageLibraryAsync, MediaTypeOptions } from 'expo-image-picker';
 import axios from "axios";
 import { UserContext } from "../components/UserContext";
+import FormData from 'form-data'
+import { IP } from "../ip";
+
+const uploadImage = async (imageURI: String) => {
+    var body = new FormData();
+    body.append('file', { name: "name", type: 'image/jpeg', uri: imageURI });
+    try {
+        const res = await axios.post(`http://${IP}:3000/file/file`, body)
+        console.log("save passed");
+        const url = res.data
+        console.log("got res: " + res.data[url]);
+        return url
+    } catch (err) {
+        console.log("save failed" + err);
+    }
+    return "url"
+}
 type Inputs = {
     example: string,
     exampleRequired: string,
@@ -39,13 +56,17 @@ const AddPost = () => {
             return;
         }
         setLoading(true);
+        console.log(photo.uri);
+        
+        const url = await uploadImage(photo.uri)
+        console.log(url);
         const body = {
-            'message' : data.message,
-            'sender' : userInfo.id,
-            'photo' : photo.base64
+            'message': data.message,
+            'sender': userInfo.id,
+            'photo': url
         }
-
-        await axios.post('http://192.168.1.15:3000/post', body, {
+        if (body.photo != 'url'){
+        await axios.post(`http://${IP}:3000/post`, body, {
             headers: {
                 'Authorization': `JWT ${userInfo.accessToken}`
             }
@@ -57,6 +78,8 @@ const AddPost = () => {
             .catch(e => {
                 console.log(`add post error ${e}`);
             });
+        } else console.log('not posting');
+        
         setLoading(false);
     };
     return (
@@ -70,7 +93,7 @@ const AddPost = () => {
             {photo && (
                 <>
                     <Image
-                        source={{  uri: 'data:image/jpeg;base64,' + photo.base64  }}
+                        source={{ uri: 'data:image/jpeg;base64,' + photo.base64 }}
                         style={{ width: 300, height: 300 }}
                     />
                 </>
