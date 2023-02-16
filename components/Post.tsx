@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
 import Icon from 'react-native-vector-icons/Entypo';
 import pic from '../assets/icon.png'
 
-const Post = ({ user, image, text }: any) => {
+const Post = ({ user, image=pic, text }: any) => {
     return (
         <View style={styles.container}>
             <View style={styles.header}>

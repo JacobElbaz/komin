@@ -6,7 +6,7 @@ import {
     useWindowDimensions,
     ScrollView,
 } from 'react-native';
-import Logo from '../assets/icon.png'
+import Logo from '../assets/Komin.png'
 import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
 import SocialSignInButtons from '../components/SocialSignInButtons';

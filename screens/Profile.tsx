@@ -29,9 +29,6 @@ const Profile = () => {
                     </View>
                 </View>
                 <Text style={styles.userName}>Publications</Text>
-                <Post user={{ name: 'Jacob Elbaz', picture: pic }} image={pic} text={'This is a new post.'}></Post>
-                <Post user={{ name: 'Jacob Elbaz', picture: pic }} image={pic} text={'This is a new post.'}></Post>
-                <Post user={{ name: 'Jacob Elbaz', picture: pic }} image={pic} text={'This is a new post.'}></Post>
             </ScrollView>
         </View>
     );
