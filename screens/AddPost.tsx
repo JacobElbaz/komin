@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Image, View } from "react-native";
+import { Button, Image, View, StyleSheet } from "react-native";
 import CustomInput from '../components/CustomInput';
 import { useForm } from 'react-hook-form';
 import CustomButton from "../components/CustomButton";
@@ -9,6 +9,7 @@ import { UserContext } from "../components/UserContext";
 import FormData from 'form-data'
 import { IP } from "../ip";
 import { create } from 'apisauce'
+import imgPlaceholder from '../assets/default-placeholder.png'
 
 const apiClient = create({
     baseURL: `http://${IP}:3000`,
@@ -37,7 +38,7 @@ const uploadImage = async (imageURI: String) => {
 const AddPost = () => {
     const [loading, setLoading] = React.useState(false);
     const [photo, setPhoto] = React.useState(null);
-    const { userInfo } : any = React.useContext(UserContext)
+    const { userInfo }: any = React.useContext(UserContext)
     const handleChoosePhoto = async () => {
         const response = await launchImageLibraryAsync({
             mediaTypes: MediaTypeOptions.Images,
@@ -91,21 +92,17 @@ const AddPost = () => {
         setLoading(false);
     };
     return (
-        <View>
+        <View style={styles.container}>
             <CustomInput
                 name="message"
                 placeholder="What's new ?"
                 control={control}
                 rules={{ required: 'Description is required' }}
             />
-            {photo && (
-                <>
-                    <Image
-                        source={{ uri: photo.uri }}
-                        style={{ width: 300, height: 300 }}
-                    />
-                </>
-            )}
+            <Image
+                source={photo ? { uri: photo.uri } : imgPlaceholder}
+                style={{ width: 300, height: 300 }}
+            />
             <Button title="Choose Photo" onPress={handleChoosePhoto} />
 
             <CustomButton
@@ -115,5 +112,11 @@ const AddPost = () => {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        alignItems: 'center'
+    }
+})
 
 export default AddPost;

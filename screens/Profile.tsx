@@ -55,7 +55,7 @@ const Profile = () => {
                 </View>
                 <Text style={styles.userName}>Publications</Text>
                 {posts?.map((item) => (
-                    <Post user={{ name: item.senderName, picture: item.userPicture }} image={item.photo} text={item.message} />
+                    <Post key={item.message} user={{ name: item.senderName, picture: item.userPicture }} image={item.photo} text={item.message} />
                 ))}
             </ScrollView>
         </View>
