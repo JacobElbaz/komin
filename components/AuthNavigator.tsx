@@ -4,35 +4,42 @@ import Login from '../screens/Login';
 import Signup from '../screens/Signup';
 import Layout from './Layout';
 import { UserContext } from './UserContext'
+import SplashScreen from '../screens/SplashScreen';
 
 const Stack = createStackNavigator();
 // Navigator, Screen, Group
 
 function AuthNavigator() {
-  const {userInfo} = React.useContext(UserContext);
-  console.log(userInfo);
-
+  const { userInfo, splashLoading } : any = React.useContext(UserContext);
 
   return (
     <Stack.Navigator>
-      {userInfo.accessToken ? (
+      {splashLoading ? (
         <Stack.Screen
-          name={'Layout'}
-          component={Layout}
+          name={'SplashScreen'}
+          component={SplashScreen}
           options={{ headerShown: false }} />
       ) : (
-        <>
+        userInfo.accessToken ? (
           <Stack.Screen
-            name={'Login'}
-            component={Login}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name={'Signup'}
-            component={Signup}
-          />
-        </>
+            name={'Layout'}
+            component={Layout}
+            options={{ headerShown: false }} />
+        ) : (
+          <>
+            <Stack.Screen
+              name={'Login'}
+              component={Login}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name={'Signup'}
+              component={Signup}
+            />
+          </>
+        )
       )}
+
     </Stack.Navigator>
   );
 }

@@ -3,7 +3,7 @@ import { UserContext } from '../components/UserContext';
 import React from 'react';
 
 const EditProfile = () => {
-    const {userInfo, logout} = React.useContext(UserContext)
+    const {logout} = React.useContext(UserContext)
     
     return (
         <View style={styles.container}>

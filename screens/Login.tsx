@@ -31,7 +31,7 @@ const Login = () => {
         handleSubmit,
         formState: { errors },
     } = useForm<Inputs>();
-    const {login} = React.useContext(UserContext)
+    const {login} : any = React.useContext(UserContext)
 
     const onSignInPressed = async (data: any) => {
         if (loading) {

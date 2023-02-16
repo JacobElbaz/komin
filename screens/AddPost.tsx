@@ -25,7 +25,6 @@ const uploadImage = async (imageURI: String) => {
         } else {
             if (res.data) {
                 const d: any = res.data
-                console.log("----= url:" + d.url)
                 return d.url
             }
         }
@@ -38,7 +37,7 @@ const uploadImage = async (imageURI: String) => {
 const AddPost = () => {
     const [loading, setLoading] = React.useState(false);
     const [photo, setPhoto] = React.useState(null);
-    const { userInfo } = React.useContext(UserContext)
+    const { userInfo } : any = React.useContext(UserContext)
     const handleChoosePhoto = async () => {
         const response = await launchImageLibraryAsync({
             mediaTypes: MediaTypeOptions.Images,
@@ -50,6 +49,10 @@ const AddPost = () => {
             setPhoto(response.assets[0]);
         };
     }
+    type Inputs = {
+        example: string,
+        exampleRequired: string,
+    };
 
     const {
         control,
@@ -62,7 +65,6 @@ const AddPost = () => {
             return;
         }
         setLoading(true);
-        console.log(photo.uri);
 
         const url = await uploadImage(photo.uri)
         console.log(url);
@@ -80,7 +82,6 @@ const AddPost = () => {
             })
                 .then(res => {
                     let userInfo = res.data;
-                    console.log(`userInfo: ${userInfo}`);
                 })
                 .catch(e => {
                     console.log(`add post error ${e}`);

@@ -6,7 +6,7 @@ import { IP } from '../ip';
 export const UserContext = createContext({});
 
 export const Context = ({children} : any) => {
-  const [userInfo, setUserInfo] = useState({ accessToken : null});
+  const [userInfo, setUserInfo] = useState({ accessToken : null, refreshToken: null});
   const [isLoading, setIsLoading] = useState(false);
   const [splashLoading, setSplashLoading] = useState(false);
 
@@ -24,7 +24,6 @@ export const Context = ({children} : any) => {
         setUserInfo(userInfo);
         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
         setIsLoading(false);
-        console.log(userInfo);
       })
       .catch(e => {
         console.log(`register error ${e}`);
@@ -42,7 +41,6 @@ export const Context = ({children} : any) => {
       })
       .then(res => {
         let userInfo = res.data;
-        console.log(userInfo);
         setUserInfo(userInfo);
         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
         setIsLoading(false);
@@ -64,9 +62,8 @@ export const Context = ({children} : any) => {
         },
       )
       .then(res => {
-        console.log(res.data);
         AsyncStorage.removeItem('userInfo');
-        setUserInfo({accessToken: null});
+        setUserInfo({accessToken: null, refreshToken: null});
         setIsLoading(false);
       })
       .catch(e => {
