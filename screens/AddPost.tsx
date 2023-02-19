@@ -68,7 +68,6 @@ const AddPost = () => {
         setLoading(true);
 
         const url = await uploadImage(photo.uri)
-        console.log(url);
         const body = {
             'message': data.message,
             'senderId': userInfo.id,

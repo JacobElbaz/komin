@@ -1,37 +1,59 @@
-import { SafeAreaView, ScrollView } from "react-native";
-import BubbleMessage from "../components/BubbleMessage";
+import React from 'react'
+import { SafeAreaView, FlatList, TextInput, StyleSheet, TouchableOpacity, View } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import BubbleMessage from '../components/BubbleMessage';
+import socket from '../socket';
 
 const ChatRoom = () => {
+    const handleOnSend = () => {
+
+    }
+
     return (
-        <SafeAreaView>
-            <ScrollView showsVerticalScrollIndicator={false}>
-                <BubbleMessage mine={true} text="Hello world" />
-                <BubbleMessage mine={false} text="Hello world" sender='Chloe'/>
-                <BubbleMessage mine={true} text="Hello world" />
-                <BubbleMessage mine={false} text="Hello world" sender='Mike'/>
-                <BubbleMessage mine={true} text="Hello world" />
-                <BubbleMessage mine={false} text="Hello world" sender='Max'/>
-                <BubbleMessage mine={true} text="Hello world" />
-                <BubbleMessage mine={false} text="Hello world" sender='Jym'/>
-                <BubbleMessage mine={true} text="Hello world" />
-                <BubbleMessage mine={false} text="Hello world" sender='Clark'/>
-                <BubbleMessage mine={true} text="Hello world" />
-                <BubbleMessage mine={false} text="Hello world" sender='Stephany'/>
-                <BubbleMessage mine={true} text="Hello world" />
-                <BubbleMessage mine={false} text="Hello world" sender='Suzy'/>
-                <BubbleMessage mine={true} text="Hello world" />
-                <BubbleMessage mine={false} text="Hello world" sender='Stan'/>
-                <BubbleMessage mine={true} text="Hello world" />
-                <BubbleMessage mine={false} text="Hello world" sender='Joe'/>
-                <BubbleMessage mine={true} text="Hello world" />
-                <BubbleMessage mine={false} text="Hello world" sender='Samantha'/>
-                <BubbleMessage mine={true} text="Hello world" />
-                <BubbleMessage mine={false} text="Hello world" sender='Wendy'/>
-                <BubbleMessage mine={true} text="Hello world" />
-                <BubbleMessage mine={false} text="Hello world" sender='Alex'/>
-            </ScrollView>
+        <SafeAreaView style={styles.container}>
+            <FlatList
+                data={[]}
+                style={styles.scroll}
+                renderItem={({ item }) => <BubbleMessage mine={item.mine} text={item.text} sender={item.name} />}
+                inverted
+            />
+            <View style={styles.inputContainer}>
+                <TextInput
+                    multiline
+                    placeholder='Type something...'
+                    style={styles.input}></TextInput>
+                <TouchableOpacity style={styles.iconContainer} onPress={handleOnSend}><Icon name={'send'} style={styles.icon} /></TouchableOpacity>
+            </View>
         </SafeAreaView>
     );
 }
+
+const styles = StyleSheet.create({
+
+    container: {
+        height: '100%'
+    },
+    scroll: {},
+    inputContainer: {
+        flexDirection: 'row',
+        width: '100%',
+        margin: 10,
+    },
+    input: {
+        backgroundColor: 'white',
+        width: '80%',
+        paddingLeft: 10
+    },
+    iconContainer: {
+        backgroundColor: '#e32f45',
+        borderRadius: 50,
+        padding: 10,
+        margin: 5
+    },
+    icon: {
+        color: 'white',
+        fontSize: 20
+    }
+})
 
 export default ChatRoom;

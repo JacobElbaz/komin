@@ -13,7 +13,7 @@ const ChatHeader = ({ username, picture }: any) => {
 	return (
 		<View style={styles.container}>
 			<TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Conversations')}>
-				<Icon name="angle-left" size={30} />
+				<Icon style={{color: 'white'}} name="angle-left" size={30} />
 			</TouchableOpacity>
 			<View style={styles.profileOptions}>
 				<TouchableOpacity style={styles.profile}>
@@ -30,9 +30,8 @@ const ChatHeader = ({ username, picture }: any) => {
 const styles = StyleSheet.create({
 	container: {
 		flexDirection: "row",
-		backgroundColor: 'white',
-		paddingTop: 40,
-		paddingBottom: 10,
+		backgroundColor: '#e32f45',
+		padding: 15
 	},
 	backButton: {
 		alignSelf: "center",
@@ -63,7 +62,8 @@ const styles = StyleSheet.create({
 	},
 	username: {
 		fontSize: 18,
-		fontWeight: "bold",
+		fontWeight: "500",
+		color: 'white'
 	},
 	options: {
 		flex: 1,

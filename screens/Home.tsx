@@ -1,4 +1,4 @@
-import { StyleSheet, ScrollView, FlatList, RefreshControl, Text, View } from 'react-native';
+import { StyleSheet, ScrollView, FlatList, RefreshControl, Text, View, StatusBar } from 'react-native';
 import React from 'react'
 import Post from '../components/Post';
 import { create } from 'apisauce'
@@ -39,18 +39,21 @@ export default function Home() {
       try {
         console.log('fetching data');
         posts = await apiClient.get('/post')
+        posts = posts.data
         users = await apiClient.get('/user')
+        users = users.data
       } catch (err) {
         console.log('fetch posts failed ' + err);
       }
-      if (!posts.data.err) {
-        posts.data?.forEach(post => {
-          const userPicture = users.data.find(user => user._id == post.senderId).picture;
-          post.userPicture = userPicture ? userPicture : null;
-          setPosts(posts.data)
+      if (!posts.err) {
+        posts?.forEach( post => {
+          const userPicture = users.find(user => user._id == post.senderId);
+          if (userPicture.picture) {
+            post.userPicture = userPicture.picture;
+          }
         })
+        setPosts(posts);
       } else {
-        console.log(posts.data);
         logout()
       }
     }
@@ -58,19 +61,20 @@ export default function Home() {
 
   useEffect(() => {
     const unsuscribe = navigation.addListener('focus', async () => {
-      getPosts();
+      await getPosts();
     })
     return unsuscribe
   })
 
   return (
     <View style={styles.container}>
+       <StatusBar backgroundColor={'#e32f45'}/>
       {posts ? (
         <FlatList
           data={posts}
           keyExtractor={post => post._id.toString()}
           renderItem={({ item }) => (
-            <Post user={{ name: item.senderName, picture: item.userPicture }} image={item.photo} text={item.message}></Post>
+            <Post userId={item.senderId} image={item.photo} text={item.message}></Post>
           )}
           showsVerticalScrollIndicator={false}
           refreshControl={
@@ -97,6 +101,8 @@ const styles = StyleSheet.create({
   text: {
     alignSelf: 'center',
     color: 'dimgray',
-    margin: 15
+    margin: 15,
+    height: 500,
+    textAlignVertical: 'center'
   }
 });

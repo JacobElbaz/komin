@@ -5,6 +5,7 @@ import ChatRoom from '../screens/ChatRoom';
 import EditProfile from '../screens/EditProfile';
 import Post from '../screens/AddPost';
 import NavBar from './NavBar';
+import UserList from '../screens/UserList';
 
 
 const Stack = createStackNavigator(); 
@@ -13,10 +14,11 @@ const Layout = () => {
     return(
         <Stack.Navigator>
             <Stack.Screen name='NavBar' component={NavBar} options={{headerShown: false}}/>
-            <Stack.Screen name='Edit Profile' component={EditProfile} />
+            <Stack.Screen name='Edit Profile' component={EditProfile} options={{headerStyle: {backgroundColor: '#e32f45'}, headerTitleStyle: {color: 'white'}}}/>
             <Stack.Screen name='Chat' component={Chat} options={{headerShown: false}} /> 
-            <Stack.Screen name='Global Chat' component={ChatRoom} /> 
-            <Stack.Screen name='Add a new post' component={Post} /> 
+            <Stack.Screen name='Global Chat' component={ChatRoom} options={{headerStyle: {backgroundColor: '#e32f45'}, headerTitleStyle: {color: 'white'}}}/> 
+            <Stack.Screen name='Add a new post' component={Post} options={{headerStyle: {backgroundColor: '#e32f45'}, headerTitleStyle: {color: 'white'}}}/> 
+            <Stack.Screen name='Contacts' component={UserList} options={{headerStyle: {backgroundColor: '#e32f45'}, headerTitleStyle: {color: 'white'}}}/> 
         </Stack.Navigator>
     )
 }

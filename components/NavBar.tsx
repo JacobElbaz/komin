@@ -60,7 +60,9 @@ const NavBar = () => {
                             <Icon name={'home-outline'} size={25} color={focused ? '#e32f45' : '#748c94'} />
                             <Text style={{ fontSize: 12, color: focused ? '#e32f45' : '#748c94' }}>HOME</Text>
                         </View>
-                    )
+                    ),
+                    headerStyle: {backgroundColor: '#e32f45'},
+                    headerTitleStyle: {color: 'white'}
                 }} />
             <Tab.Screen name='Conversations' component={Conversations}
                 options={{
@@ -69,7 +71,8 @@ const NavBar = () => {
                             <Icon name={'chatbubble-ellipses-outline'} size={25} color={focused ? '#e32f45' : '#748c94'} />
                             <Text style={{ fontSize: 12, color: focused ? '#e32f45' : '#748c94' }}>CHAT</Text>
                         </View>
-                    )
+                    ),
+                    headerShown: false
                 }} />
             <Tab.Screen name='Add a new post' component={Post}
                 options={{
@@ -78,7 +81,7 @@ const NavBar = () => {
                     ),
                     tabBarButton: (props) => {
                         return <CustomTabBarButton {...props} />;
-                    }
+                    },
                 }} />
             <Tab.Screen name='Global Chat' component={ChatRoom}
                 options={{
@@ -103,7 +106,9 @@ const NavBar = () => {
                             <Icon name={'person-outline'} size={25} color={focused ? '#e32f45' : '#748c94'} />
                             <Text style={{ fontSize: 12, color: focused ? '#e32f45' : '#748c94' }}>PROFILE</Text>
                         </View>
-                    )
+                    ),
+                    headerStyle: {backgroundColor: '#e32f45'},
+                    headerTitleStyle: {color: 'white'}
                 }} />
         </Tab.Navigator>
     );

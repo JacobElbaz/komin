@@ -8,6 +8,8 @@ import { create } from 'apisauce';
 import { IP } from '../ip';
 import imgPlaceholder from '../assets/default-placeholder.png'
 import { launchImageLibraryAsync, MediaTypeOptions } from 'expo-image-picker';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const apiClient = create({
     baseURL: `http://${IP}:3000`,
@@ -35,10 +37,11 @@ const uploadImage = async (imageURI: String) => {
 
 
 const EditProfile = () => {
+    const [loading, setLoading] = React.useState(false);
     const { userInfo, logout }: any = React.useContext(UserContext)
     const [user, setUser] = useState(null)
     const [changes, setChanges] = useState(true)
-    const [photo, setPhoto] = useState({uri: imgPlaceholder})
+    const [photo, setPhoto] = useState({ uri: 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png' })
     type Inputs = {
         example: string,
         exampleRequired: string,
@@ -64,6 +67,9 @@ const EditProfile = () => {
         try {
             let user = await apiClient.get(`/user/${userInfo.id}`)
             setUser(user.data)
+            if (user.data.picture) {
+                setPhoto({uri: user.data.picture})
+            }
         } catch (err) {
             console.log('fail to fetch user');
         }
@@ -71,22 +77,38 @@ const EditProfile = () => {
     useEffect(() => {
         const unsuscribe = navigation.addListener('focus', async () => {
             getUser();
-            console.log(user);
         })
         return unsuscribe
     })
 
-    const handleOnConfirm = async (data : any) => {
-        const apiClient = create({
-            baseURL: `http://${IP}:3000`,
-            headers: {
-                Accept: 'application/vnd.github.v3+json',
-                'Authorization': `JWT ${userInfo?.accessToken}`
-            },
-        })
+    const handleOnConfirm = async (data: any) => {
+        if (loading) {
+            return;
+        }
+        setLoading(true);
+        const url = await uploadImage(photo.uri)
         const body = {
             name: data.name,
-            email: data.email
+            email: data.email,
+            picture: url
+        }
+        try {
+            await axios.put(`http://${IP}:3000/user/${userInfo.id}`, body, {
+                headers: {
+                    'Authorization': `JWT ${userInfo.accessToken}`
+                }
+            })
+                .then(async res => {
+                    let user = { accessToken: userInfo.accessToken, id: userInfo.id, name: body.name, refreshToken: userInfo.refreshToken, picture: url, email: body.email };
+                    await AsyncStorage.setItem('userInfo', JSON.stringify(user))
+                    navigation.navigate('Profile');
+                })
+                .catch(e => {
+                    console.log(`add post error ${e}`);
+                });
+        } catch (err) {
+            console.log('update fail' + err);
+
         }
         apiClient.put(`/user/${userInfo.id}`, data)
     }
@@ -108,7 +130,7 @@ const EditProfile = () => {
                 <ScrollView style={styles.container}>
                     <TouchableOpacity style={styles.imgbtn} onPress={handleChoosePhoto}>
                         <Image
-                            source={user?.picture ? { uri: user.picture } : photo.uri}
+                            source={{ uri: photo.uri }}
                             style={styles.picture}
                         />
                     </TouchableOpacity>

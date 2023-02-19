@@ -6,10 +6,12 @@ import React, { useEffect } from "react";
 import { UserContext } from "../components/UserContext";
 import { create } from "apisauce";
 import { IP } from "../ip";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Profile = () => {
     const { userInfo }: any = React.useContext(UserContext)
     const [posts, setPosts] = React.useState()
+    const [user, setUser] = React.useState(userInfo)
     type Nav = {
         navigate: (value: string) => void;
         addListener: (value: string, cb: Function) => void;
@@ -26,7 +28,7 @@ const Profile = () => {
         })
         try {
             console.log('fetching data');
-            const posts = await apiClient.get('/post')
+            const posts = await apiClient.get(`/post?sender=${userInfo.id}`)
             setPosts(posts.data)
         } catch (err) {
             console.log('fail get posts by id ' + err);
@@ -34,6 +36,8 @@ const Profile = () => {
     }
     useEffect(() => {
         const unsuscribe = navigation.addListener('focus', async () => {
+            const userFromStorage = await AsyncStorage.getItem('userInfo')
+            setUser(JSON.parse(userFromStorage))
             getPosts();
         })
         return unsuscribe
@@ -44,10 +48,10 @@ const Profile = () => {
             <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
                 <View style={styles.infoContainer}>
                     <Image
-                        source={pic}
+                        source={{uri: user.picture}}
                         style={styles.profilePic} />
                     <View style={styles.edit}>
-                        <Text style={styles.userName}>{userInfo.name}</Text>
+                        <Text style={styles.userName}>{user.name}</Text>
                         <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('Edit Profile')}>
                             <Text style={{ color: '#ffff' }}>Edit Profile</Text>
                         </TouchableOpacity>
@@ -55,7 +59,7 @@ const Profile = () => {
                 </View>
                 <Text style={styles.userName}>Publications</Text>
                 {posts?.map((item) => (
-                    <Post key={item.message} user={{ name: item.senderName, picture: item.userPicture }} image={item.photo} text={item.message} />
+                    <Post key={item.message} userId={user.id} image={item.photo} text={item.message} />
                 ))}
             </ScrollView>
         </View>

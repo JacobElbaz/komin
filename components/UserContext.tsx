@@ -10,7 +10,7 @@ export const Context = ({children} : any) => {
   const [isLoading, setIsLoading] = useState(false);
   const [splashLoading, setSplashLoading] = useState(false);
 
-  const register = (name: any, email: any, password: any) => {
+  const register = (name: string, email: string, password: string, picture: string = '') => {
     setIsLoading(true);
 
     axios
@@ -18,6 +18,7 @@ export const Context = ({children} : any) => {
         name,
         email,
         password,
+        picture
       })
       .then(res => {
         let userInfo = res.data;
@@ -41,6 +42,8 @@ export const Context = ({children} : any) => {
       })
       .then(res => {
         let userInfo = res.data;
+        console.log(userInfo);
+        
         setUserInfo(userInfo);
         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
         setIsLoading(false);
@@ -58,6 +61,7 @@ export const Context = ({children} : any) => {
       .get(
         `http://${IP}:3000/auth/logout`,
         {
+
           headers: {'Authorization': `JWT ${userInfo.refreshToken}`},
         },
       )
@@ -89,6 +93,10 @@ export const Context = ({children} : any) => {
       console.log(`is logged in error ${e}`);
     }
   };
+
+  const refreshContext= async () => {
+    
+  }
 
   useEffect(() => {
     isLoggedIn();

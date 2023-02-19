@@ -5,7 +5,6 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import pic from '../assets/icon.png'
 
 const Conversation = ({ contact }: any) => {
-    
     type Nav = {
         navigate: (value: string, params: any) => void;
     }
@@ -14,7 +13,7 @@ const Conversation = ({ contact }: any) => {
     return (
         <TouchableOpacity style={styles.container} onPress={() => navigation.navigate('Chat', contact)}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Image source={contact.picture} style={styles.image}></Image>
+                <Image source={contact.picture ? {uri: contact.picture} : pic} style={styles.image}></Image>
                 <Text style={styles.text}>{contact.name}</Text>
             </View>
             <Icon name={'chevron-right'} style={styles.icon}></Icon>
@@ -40,7 +39,7 @@ const styles = StyleSheet.create({
         marginRight: 10
     },
     text: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 'bold'
     },
     icon: {
