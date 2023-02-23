@@ -1,7 +1,6 @@
 import { SafeAreaView, FlatList, StatusBar } from "react-native";
 import React from 'react'
 import Conversation from "../components/Conversation";
-import pic from '../assets/icon.png'
 import ConversationHeader from "../components/ConversationHeader";
 
 

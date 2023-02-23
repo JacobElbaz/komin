@@ -7,9 +7,9 @@ import pic from '../assets/icon.png'
 import { IP } from '../ip';
 import { UserContext } from './UserContext';
 
-const Post = ({ userId, image = pic, text }: any) => {
+const Post = ({ userId, image = pic, text, post }: any) => {
     type Nav = {
-        navigate: (value: string) => void;
+        navigate: (value: string, params: any) => void;
         addListener: (value: string, cb: Function) => void;
     }
     const navigation = useNavigation<Nav>();
@@ -24,7 +24,7 @@ const Post = ({ userId, image = pic, text }: any) => {
             },
         })
         try {
-            let user = await apiClient.get(`/user/${userId}`)
+            const user = await apiClient.get(`/user/${userId}`)
             setUser(user.data)
         } catch (err) {
             console.log('fail to fetch user');
@@ -32,6 +32,8 @@ const Post = ({ userId, image = pic, text }: any) => {
     }
     useEffect(() => {
             getUser();
+            console.log(post);
+            
     }, [])
 
     return (
@@ -44,7 +46,7 @@ const Post = ({ userId, image = pic, text }: any) => {
                     <Text style={styles.userName}>{user?.name}</Text>
                 </View>
                 {userInfo.id == userId &&
-                    <TouchableOpacity style={styles.treedot} onPressOut={() => { }}>
+                    <TouchableOpacity style={styles.treedot} onPress={()=>navigation.navigate('Edit Post', post)}>
                         <Icon style={{fontSize: 15}} name='dots-three-vertical' />
                     </TouchableOpacity>
                 }
@@ -63,10 +65,10 @@ const Post = ({ userId, image = pic, text }: any) => {
 
 const styles = StyleSheet.create({
     container: {
-        borderRadius: 10,
         elevation: 1,
         backgroundColor: '#ffff',
-        marginTop: 10
+        marginTop: 10,
+        padding: 5
     },
     header: {
         flexDirection: 'row',
@@ -87,10 +89,10 @@ const styles = StyleSheet.create({
         marginLeft: 5
     },
     image: {
-        width: 200,
-        height: 200,
+        width: 350,
+        height: 250,
         alignSelf: 'center',
-        margin: 15
+        marginBottom: 30
     },
     treedot: {
         justifyContent: 'center'

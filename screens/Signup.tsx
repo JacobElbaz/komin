@@ -5,7 +5,6 @@ import CustomButton from '../components/CustomButton';
 import SocialSignInButtons from '../components/SocialSignInButtons';
 import { useNavigation } from '@react-navigation/core';
 import { useForm } from 'react-hook-form';
-import axios from 'axios'
 import { UserContext } from '../components/UserContext';
 
 const EMAIL_REGEX =
@@ -19,7 +18,7 @@ const Signup = () => {
         navigate: (value: string, params: any) => void;
     }
     const navigation = useNavigation<Nav>();
-    const {register} = React.useContext(UserContext)
+    const { register } = React.useContext(UserContext)
 
     const onRegisterPressed = async (data: any) => {
         if (loading) {
@@ -92,7 +91,7 @@ const Signup = () => {
                 />
 
                 <CustomButton
-                    text={loading ? 'Loading...' :"Register"}
+                    text={loading ? 'Loading...' : "Register"}
                     onPress={handleSubmit(onRegisterPressed)}
                 />
 

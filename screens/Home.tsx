@@ -1,7 +1,7 @@
 import { StyleSheet, ScrollView, FlatList, RefreshControl, Text, View, StatusBar } from 'react-native';
 import React from 'react'
 import Post from '../components/Post';
-import { create } from 'apisauce'
+import { ApiErrorResponse, ApiOkResponse, create } from 'apisauce'
 import { IP } from '../ip';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
@@ -25,7 +25,7 @@ export default function Home() {
 
   const getPosts = async () => {
     const userInfoJson = await AsyncStorage.getItem('userInfo')
-    const user = await JSON.parse(userInfoJson)
+    const user = userInfoJson ? await JSON.parse(userInfoJson) : null
     if (user) {
       const apiClient = create({
         baseURL: `http://${IP}:3000`,
@@ -35,7 +35,7 @@ export default function Home() {
         },
       })
       let posts = []
-      let users = []
+      let users: ApiErrorResponse<unknown> | ApiOkResponse<unknown> | never[] = []
       try {
         console.log('fetching data');
         posts = await apiClient.get('/post')
@@ -46,7 +46,7 @@ export default function Home() {
         console.log('fetch posts failed ' + err);
       }
       if (!posts.err) {
-        posts?.forEach( post => {
+        posts?.forEach( (post: { senderId: any; userPicture: any; }) => {
           const userPicture = users.find(user => user._id == post.senderId);
           if (userPicture.picture) {
             post.userPicture = userPicture.picture;
@@ -74,7 +74,7 @@ export default function Home() {
           data={posts}
           keyExtractor={post => post._id.toString()}
           renderItem={({ item }) => (
-            <Post userId={item.senderId} image={item.photo} text={item.message}></Post>
+            <Post userId={item.senderId} image={item.photo} text={item.message} post={item}></Post>
           )}
           showsVerticalScrollIndicator={false}
           refreshControl={
@@ -96,7 +96,6 @@ export default function Home() {
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 15,
   },
   text: {
     alignSelf: 'center',

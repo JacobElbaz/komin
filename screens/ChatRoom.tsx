@@ -8,11 +8,17 @@ const ChatRoom = () => {
     const handleOnSend = () => {
 
     }
+    interface Idata {
+        mine: Boolean;
+        text: String;
+        name: String
+    }
+    const Data : Idata[] = []
 
     return (
         <SafeAreaView style={styles.container}>
             <FlatList
-                data={[]}
+                data = {Data}
                 style={styles.scroll}
                 renderItem={({ item }) => <BubbleMessage mine={item.mine} text={item.text} sender={item.name} />}
                 inverted

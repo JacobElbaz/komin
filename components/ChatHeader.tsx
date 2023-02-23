@@ -5,19 +5,19 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 
 const ChatHeader = ({ username, picture }: any) => {
 	type Nav = {
-        navigate: (value: string) => void;
+		[x: string]: any;
     }
 
     const navigation = useNavigation<Nav>(); 
     
 	return (
 		<View style={styles.container}>
-			<TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Conversations')}>
+			<TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
 				<Icon style={{color: 'white'}} name="angle-left" size={30} />
 			</TouchableOpacity>
 			<View style={styles.profileOptions}>
 				<TouchableOpacity style={styles.profile}>
-					<Image style={styles.image} source={picture} />
+					<Image style={styles.image} source={{uri: picture}} />
 					<View style={styles.usernameAndOnlineStatus}>
 						<Text style={styles.username}>{username}</Text>
 					</View>
@@ -51,8 +51,8 @@ const styles = StyleSheet.create({
 		flex: 4,
 	},
 	image: {
-		height: 65,
-		width: 65,
+		height: 50,
+		width: 50,
 		borderRadius: 32.5,
 	},
 	usernameAndOnlineStatus: {

@@ -1,7 +1,6 @@
 import { SafeAreaView, FlatList } from "react-native";
 import React, { useContext, useEffect, useState } from 'react'
 import Conversation from "../components/Conversation";
-import ConversationHeader from "../components/ConversationHeader";
 import { UserContext } from "../components/UserContext";
 import { ApiResponse, create } from "apisauce";
 import { IP } from "../ip";

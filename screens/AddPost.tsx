@@ -1,15 +1,16 @@
 import React from "react";
-import { Button, Image, View, StyleSheet } from "react-native";
+import { Button, Image, View, StyleSheet, Alert } from "react-native";
 import CustomInput from '../components/CustomInput';
 import { useForm } from 'react-hook-form';
 import CustomButton from "../components/CustomButton";
-import { launchImageLibraryAsync, MediaTypeOptions } from 'expo-image-picker';
+import { ImagePickerAsset, launchImageLibraryAsync, MediaTypeOptions } from 'expo-image-picker';
 import axios from "axios";
 import { UserContext } from "../components/UserContext";
 import FormData from 'form-data'
 import { IP } from "../ip";
 import { create } from 'apisauce'
 import imgPlaceholder from '../assets/default-placeholder.png'
+import { useNavigation } from "@react-navigation/native";
 
 const apiClient = create({
     baseURL: `http://${IP}:3000`,
@@ -36,8 +37,12 @@ const uploadImage = async (imageURI: String) => {
 }
 
 const AddPost = () => {
+    type Nav = {
+        [x: string]: any;
+    }
+    const navigation = useNavigation<Nav>();
     const [loading, setLoading] = React.useState(false);
-    const [photo, setPhoto] = React.useState(null);
+    const [photo, setPhoto] = React.useState<ImagePickerAsset | null>(null);
     const { userInfo }: any = React.useContext(UserContext)
     const handleChoosePhoto = async () => {
         const response = await launchImageLibraryAsync({
@@ -46,7 +51,7 @@ const AddPost = () => {
             aspect: [4, 3],
             quality: 1
         });
-        if (response) {
+        if (!response.canceled) {
             setPhoto(response.assets[0]);
         };
     }
@@ -66,8 +71,8 @@ const AddPost = () => {
             return;
         }
         setLoading(true);
-
-        const url = await uploadImage(photo.uri)
+        
+        const url = photo ? await uploadImage(photo.uri) : ''
         const body = {
             'message': data.message,
             'senderId': userInfo.id,
@@ -79,15 +84,13 @@ const AddPost = () => {
                 headers: {
                     'Authorization': `JWT ${userInfo.accessToken}`
                 }
-            })
-                .then(res => {
-                    let userInfo = res.data;
-                })
-                .catch(e => {
-                    console.log(`add post error ${e}`);
-                });
+            }).catch(e => {
+                console.log(`add post error ${e}`);
+            });
+            
         } else console.log('not posting');
-
+        navigation.goBack()
+        Alert.alert('Posted', 'Your post was succesfuly posted !')
         setLoading(false);
     };
     return (

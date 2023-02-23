@@ -39,7 +39,7 @@ const Login = () => {
         }
 
         setLoading(true);
-        login(data.email, data.password);
+        await login(data.email, data.password);
         setLoading(false);
     };
 

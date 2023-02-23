@@ -94,10 +94,6 @@ export const Context = ({children} : any) => {
     }
   };
 
-  const refreshContext= async () => {
-    
-  }
-
   useEffect(() => {
     isLoggedIn();
   }, []);
