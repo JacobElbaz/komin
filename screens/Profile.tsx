@@ -23,8 +23,7 @@ const Profile = () => {
             headers: {
                 Accept: 'application/vnd.github.v3+json',
                 'Authorization': `JWT ${userInfo.accessToken}`
-            },
-            params: { sender: userInfo.id }
+            }
         })
         try {
             console.log('fetching data');
