@@ -22,6 +22,7 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.jacobelbz.komin",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"

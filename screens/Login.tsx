@@ -13,7 +13,8 @@ import SocialSignInButtons from '../components/SocialSignInButtons';
 import { useNavigation } from '@react-navigation/native';
 import { useForm } from 'react-hook-form';
 import { UserContext } from '../components/UserContext';
-
+// web: 970652473586-6mkn7te3pjs27sedeqmq4vsi82j3h1cd.apps.googleusercontent.com
+// android: 970652473586-m4jub460l4snsnad0ekga0pq5uupv57a.apps.googleusercontent.com
 type Inputs = {
     example: string,
     exampleRequired: string,
@@ -31,7 +32,7 @@ const Login = () => {
         handleSubmit,
         formState: { errors },
     } = useForm<Inputs>();
-    const {login} : any = React.useContext(UserContext)
+    const { login }: any = React.useContext(UserContext)
 
     const onSignInPressed = async (data: any) => {
         if (loading) {
@@ -40,7 +41,6 @@ const Login = () => {
 
         setLoading(true);
         await login(data.email, data.password);
-        setLoading(false);
     };
 
     const onSignUpPress = () => {
