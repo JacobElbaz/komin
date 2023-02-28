@@ -1,14 +1,24 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import React, {createContext, useEffect, useState} from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { IP } from '../ip';
+import Client from "socket.io-client";
 
 export const UserContext = createContext({});
 
-export const Context = ({children} : any) => {
-  const [userInfo, setUserInfo] = useState({ accessToken : null, refreshToken: null});
+export const Context = ({ children }: any) => {
+  const [userInfo, setUserInfo] = useState({ accessToken: null, refreshToken: null });
   const [isLoading, setIsLoading] = useState(false);
   const [splashLoading, setSplashLoading] = useState(false);
+
+  //socket
+  function clientSocketConnect(clientSocket: { on: (arg0: string, arg1: () => void) => void; }): Promise<string> {
+    return new Promise((resolve) => {
+      clientSocket.on("connect", () => {
+        resolve("1")
+      });
+    })
+  }
 
   const register = (name: string, email: string, password: string, picture: string = '') => {
     setIsLoading(true);
@@ -42,8 +52,14 @@ export const Context = ({children} : any) => {
       })
       .then(res => {
         let userInfo = res.data;
+        const socket = Client(`http://${IP}:3000`, {
+          auth: {
+            token: 'barrer ' + userInfo.accessToken
+          }
+        })
+        clientSocketConnect(socket)
+        userInfo.socket = socket
         console.log(userInfo);
-        
         setUserInfo(userInfo);
         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
         setIsLoading(false);
@@ -62,12 +78,12 @@ export const Context = ({children} : any) => {
         `http://${IP}:3000/auth/logout`,
         {
 
-          headers: {'Authorization': `JWT ${userInfo.refreshToken}`},
+          headers: { 'Authorization': `JWT ${userInfo.refreshToken}` },
         },
       )
       .then(res => {
         AsyncStorage.removeItem('userInfo');
-        setUserInfo({accessToken: null, refreshToken: null});
+        setUserInfo({ accessToken: null, refreshToken: null });
         setIsLoading(false);
       })
       .catch(e => {
@@ -80,7 +96,7 @@ export const Context = ({children} : any) => {
     try {
       setSplashLoading(true);
 
-      let userInfo : any = await AsyncStorage.getItem('userInfo');
+      let userInfo: any = await AsyncStorage.getItem('userInfo');
       userInfo = JSON.parse(userInfo);
 
       if (userInfo) {

@@ -9,7 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UserContext } from '../components/UserContext';
 
 export default function Home() {
-  const { logout } = React.useContext(UserContext)
+  const { userInfo, logout } = React.useContext(UserContext)
   type Nav = {
     navigate: (value: string) => void;
     addListener: (value: string, cb: Function) => void;
@@ -24,18 +24,16 @@ export default function Home() {
   }, [refreshing])
 
   const getPosts = async () => {
-    const userInfoJson = await AsyncStorage.getItem('userInfo')
-    const user = userInfoJson ? await JSON.parse(userInfoJson) : null
-    if (user) {
+    if (userInfo) {
       const apiClient = create({
         baseURL: `http://${IP}:3000`,
         headers: {
           Accept: 'application/vnd.github.v3+json',
-          'Authorization': `JWT ${user?.accessToken}`
+          'Authorization': `JWT ${userInfo?.accessToken}`
         },
       })
       let posts = []
-      let users: ApiErrorResponse<unknown> | ApiOkResponse<unknown> | never[] = []
+      let users = []
       try {
         console.log('fetching data');
         posts = await apiClient.get('/post')

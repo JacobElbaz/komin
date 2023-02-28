@@ -1,12 +1,25 @@
-import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
+import { StyleSheet, View, Text, Image } from "react-native";
+import { IP } from "../ip";
+import { UserContext } from "./UserContext";
 
-const BubbleMessage = ({ mine, text, sender } : any) => {
+const BubbleMessage = ({ mine, text, senderId }: any) => {
+    const { userInfo } = useContext(UserContext)
+    const [sender, setSend] = useState('')
+    const findSender = async () => {
+        const sender = await axios.get(`http://${IP}:3000/user/${senderId}`, { headers: { 'Authorization': `JWT ${userInfo?.accessToken}` } })
+        setSend(sender.data)
+    }
+    useEffect(() => {
+        findSender()
+    }, [])
     return (
         <View style={[styles.message, mine ? styles.mine : styles.not_mine]}>
-            <View style={[styles.cloud, {backgroundColor: mine ? '#e32f45' : 'white'}]}>
-                <Text style={{color: '#E7E7E7'}}>{mine ? 'Me:' : sender}</Text>
-                <Text style={[ styles.text, { color: mine ? 'white' : 'black'} ]}> {text} </Text>
+            {!mine && (<Image source={{ uri: sender.picture }} style={styles.profilePic}/>)}
+            <View style={[styles.cloud, { backgroundColor: mine ? '#e32f45' : 'white' }]}>
+                <Text style={{ color: '#E7E7E7' }}>{mine ? 'Me:' : sender.name}</Text>
+                <Text style={[styles.text, { color: mine ? 'white' : 'black' }]}> {text} </Text>
             </View>
         </View>
     );
@@ -37,5 +50,11 @@ const styles = StyleSheet.create({
         paddingTop: 3,
         fontSize: 17,
         lineHeight: 22
+    },
+    profilePic: {
+        width: 30,
+        height: 30,
+        borderRadius: 50,
+        marginRight: 10 
     }
 })
