@@ -1,20 +1,19 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import Home from '../screens/Home';
-import Conversations from '../screens/Conversations';
 import Profile from '../screens/Profile';
 import ChatRoom from '../screens/ChatRoom';
 import Post from '../screens/AddPost';
 import Icon from 'react-native-vector-icons/Ionicons'
-import IconA from 'react-native-vector-icons/FontAwesome5'
 import { useNavigation } from '@react-navigation/native'
+import EditProfile from '../screens/EditProfile';
 
 
 const NavBar = () => {
     type Nav = {
         navigate: (value: string) => void;
     }
-    
+
     const navigation = useNavigation<Nav>();
     const Tab = createBottomTabNavigator();
     const CustomTabBarButton = ({ children }: any) => {
@@ -44,10 +43,11 @@ const NavBar = () => {
                 tabBarShowLabel: false,
                 tabBarStyle: {
                     position: 'absolute',
-                    bottom: 25,
-                    left: 20,
-                    right: 20,
+                    bottom: 15,
+                    left: 10,
+                    right: 10,
                     backgroundColor: '#ffffff',
+                    paddingHorizontal: 10,
                     borderRadius: 15,
                     height: 80,
                     ...styles.shadow
@@ -57,23 +57,29 @@ const NavBar = () => {
                 options={{
                     tabBarIcon: ({ focused }) => (
                         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                            <Icon name={'home-outline'} size={25} color={focused ? '#e32f45' : '#748c94'} />
+                            <Icon name={focused ? 'home' : 'home-outline'} size={25} color={focused ? '#e32f45' : '#748c94'} />
                             <Text style={{ fontSize: 12, color: focused ? '#e32f45' : '#748c94' }}>HOME</Text>
                         </View>
                     ),
-                    headerStyle: {backgroundColor: '#e32f45'},
-                    headerTitleStyle: {color: 'white'}
+                    headerStyle: { backgroundColor: '#e32f45' },
+                    headerTitleStyle: { color: 'white' }
                 }} />
-            <Tab.Screen name='Conversations' component={Conversations}
+            <Tab.Screen name='Global Chat' component={ChatRoom}
                 options={{
                     tabBarIcon: ({ focused }) => (
                         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                             <Icon name={'chatbubble-ellipses-outline'} size={25} color={focused ? '#e32f45' : '#748c94'} />
                             <Text style={{ fontSize: 12, color: focused ? '#e32f45' : '#748c94' }}>CHAT</Text>
                         </View>
-                    ),
-                    headerShown: false
-                }} />
+                    )
+                }}
+                listeners={{
+                    tabPress: e => {
+                        e.preventDefault();
+                        navigation.navigate('Global Chat');
+                    },
+                }}
+            />
             <Tab.Screen name='Add a new post' component={Post}
                 options={{
                     tabBarIcon: ({ focused }) => (
@@ -83,32 +89,26 @@ const NavBar = () => {
                         return <CustomTabBarButton {...props} />;
                     },
                 }} />
-            <Tab.Screen name='Global Chat' component={ChatRoom}
-                options={{
-                    tabBarIcon: ({ focused }) => (
-                        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                            <IconA name={'globe-americas'} size={25} color={focused ? '#e32f45' : '#748c94'} />
-                            <Text style={{ fontSize: 12, color: focused ? '#e32f45' : '#748c94' }}>GLOBAL</Text>
-                        </View>
-                    )
-                }}
-                listeners={{
-                    tabPress: e => {
-                      e.preventDefault();
-                      navigation.navigate('Global Chat');
-                    },
-                  }}
-                />
             <Tab.Screen name='Profile' component={Profile}
                 options={{
                     tabBarIcon: ({ focused }) => (
                         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                            <Icon name={'person-outline'} size={25} color={focused ? '#e32f45' : '#748c94'} />
+                            <Icon name={focused ? 'person' : 'person-outline'} size={25} color={focused ? '#e32f45' : '#748c94'} />
                             <Text style={{ fontSize: 12, color: focused ? '#e32f45' : '#748c94' }}>PROFILE</Text>
                         </View>
                     ),
-                    headerStyle: {backgroundColor: '#e32f45'},
-                    headerTitleStyle: {color: 'white'}
+                    headerStyle: { backgroundColor: '#e32f45' },
+                    headerTitleStyle: { color: 'white' }
+                }} />
+            <Tab.Screen name='Conversations' component={EditProfile}
+                options={{
+                    tabBarIcon: ({ focused }) => (
+                        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                            <Icon name={focused ? 'settings' : 'settings-outline'} size={25} color={focused ? '#e32f45' : '#748c94'} />
+                            <Text style={{ fontSize: 12, color: focused ? '#e32f45' : '#748c94' }}>SETTINGS</Text>
+                        </View>
+                    ),
+                    headerShown: false
                 }} />
         </Tab.Navigator>
     );

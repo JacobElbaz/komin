@@ -1,11 +1,10 @@
 import { StyleSheet, ScrollView, FlatList, RefreshControl, Text, View, StatusBar } from 'react-native';
 import React from 'react'
 import Post from '../components/Post';
-import { ApiErrorResponse, ApiOkResponse, create } from 'apisauce'
+import { create } from 'apisauce'
 import { IP } from '../ip';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UserContext } from '../components/UserContext';
 
 export default function Home() {

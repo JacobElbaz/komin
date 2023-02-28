@@ -158,7 +158,7 @@ const EditProfile = () => {
                         onPress={handleSubmit(handleOnConfirm)}>
                         <Text
                             style={styles.text}>
-                            Confirm changes
+                            SAVE
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -166,7 +166,7 @@ const EditProfile = () => {
                         onPress={logout}>
                         <Text
                             style={styles.text}>
-                            Logout
+                            LOGOUT
                         </Text>
                     </TouchableOpacity>
                 </ScrollView>)}
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     logout: {
         height: 50,
         width: '100%',
-        backgroundColor: '#d14b4b',
+        backgroundColor: 'red',
         borderRadius: 10,
         justifyContent: 'center',
         alignSelf: 'center',
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     confirm: {
         height: 50,
         width: '100%',
-        backgroundColor: '#0490d1',
+        backgroundColor: '#0356fc',
         borderRadius: 10,
         justifyContent: 'center',
         alignSelf: 'center',

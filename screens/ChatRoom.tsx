@@ -2,10 +2,8 @@ import React, { useContext, useEffect, useState } from 'react'
 import { SafeAreaView, FlatList, TextInput, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import BubbleMessage from '../components/BubbleMessage';
-import Client from "socket.io-client";
 import { useNavigation } from '@react-navigation/native';
 import { UserContext } from '../components/UserContext';
-import { IP } from '../ip';
 
 const ChatRoom = () => {
     const navigation = useNavigation();

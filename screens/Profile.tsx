@@ -1,6 +1,5 @@
-import { View, ScrollView, StyleSheet, Image, Text, TouchableOpacity, FlatList } from "react-native";
+import { View, ScrollView, StyleSheet, Image, Text, TouchableOpacity } from "react-native";
 import Post from '../components/Post';
-import pic from '../assets/icon.png'
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect } from "react";
 import { UserContext } from "../components/UserContext";
@@ -99,7 +98,7 @@ const styles = StyleSheet.create({
     profilePic: {
         width: 120,
         height: 120,
-        borderRadius: 50,
+        borderRadius: 100,
         marginRight: 15
     }
 });
