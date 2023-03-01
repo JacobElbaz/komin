@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text } from 'react-native';
 import CustomButton from './CustomButton';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
 import axios from 'axios';
+import { UserContext } from './UserContext';
 
 WebBrowser.maybeCompleteAuthSession();
 
-const SocialSignInButtons = () => {
+const GoogleSignInButton = () => {
+  const {setUserInfo, userInfo} = useContext(UserContext)
   const [accessToken, setAccessToken] = React.useState(null)
   const [user, setUser] = React.useState(null)
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
@@ -40,21 +42,13 @@ const SocialSignInButtons = () => {
   };
 
   return (
-    <>
-      <CustomButton
-        text="Sign In with Facebook"
-        onPress={onSignInFacebook}
-        bgColor="#E7EAF4"
-        fgColor="#4765A9"
-      />
       <CustomButton
         text="Sign In with Google"
         onPress={onSignInGoogle}
         bgColor="#FAE9EA"
         fgColor="#DD4D44"
       />
-    </>
   );
 };
 
-export default SocialSignInButtons;
+export default GoogleSignInButton;

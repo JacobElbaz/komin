@@ -119,6 +119,7 @@ export const Context = ({ children }: any) => {
       value={{
         isLoading,
         userInfo,
+        setUserInfo,
         splashLoading,
         register,
         login,

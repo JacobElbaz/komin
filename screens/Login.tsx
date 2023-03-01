@@ -9,7 +9,7 @@ import {
 import Logo from '../assets/Komin.png'
 import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
-import SocialSignInButtons from '../components/SocialSignInButtons';
+import GoogleSignInButton from '../components/GoogleSignInButton';
 import { useNavigation } from '@react-navigation/native';
 import { useForm } from 'react-hook-form';
 import { UserContext } from '../components/UserContext';
@@ -82,7 +82,7 @@ const Login = () => {
                     onPress={handleSubmit(onSignInPressed)}
                 />
 
-                <SocialSignInButtons />
+                <GoogleSignInButton />
 
                 <CustomButton
                     text="Don't have an account? Create one"

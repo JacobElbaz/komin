@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
 import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
-import SocialSignInButtons from '../components/SocialSignInButtons';
+import GoogleRegisterButton from '../components/GoogleRegisterButton';
 import { useNavigation } from '@react-navigation/core';
 import { useForm } from 'react-hook-form';
 import { UserContext } from '../components/UserContext';
@@ -95,7 +95,7 @@ const Signup = () => {
                     onPress={handleSubmit(onRegisterPressed)}
                 />
 
-                <SocialSignInButtons />
+                <GoogleRegisterButton />
 
                 <CustomButton
                     text="Have an account? Sign in"
