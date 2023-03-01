@@ -18,7 +18,7 @@ const BubbleMessage = ({ mine, text, senderId }: any) => {
         <View style={[styles.message, mine ? styles.mine : styles.not_mine]}>
             {!mine && (<Image source={{ uri: sender.picture }} style={styles.profilePic}/>)}
             <View style={[styles.cloud, { backgroundColor: mine ? '#e32f45' : 'white' }]}>
-                <Text style={{ color: '#E7E7E7' }}>{mine ? 'Me:' : sender.name}</Text>
+                <Text style={{ color: mine ? '#E7E7E7' : 'grey' }}>{mine ? 'Me:' : sender.name}</Text>
                 <Text style={[styles.text, { color: mine ? 'white' : 'black' }]}> {text} </Text>
             </View>
         </View>

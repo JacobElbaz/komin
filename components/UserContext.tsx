@@ -124,6 +124,7 @@ export const Context = ({ children }: any) => {
         register,
         login,
         logout,
+        setSplashLoading
       }}>
       {children}
     </UserContext.Provider>

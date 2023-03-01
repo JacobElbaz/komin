@@ -1,20 +1,23 @@
 import React from 'react';
-import {View, Text, StyleSheet, Pressable} from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-const CustomButton = ({onPress, text, type = 'PRIMARY', bgColor, fgColor}: any) => {
+
+const CustomButton = ({ onPress, text, type = 'PRIMARY', bgColor, fgColor, icon = null }: any) => {
   return (
     <Pressable
       onPress={onPress}
       style={[
         styles.container,
         styles[`container_${type}`],
-        bgColor ? {backgroundColor: bgColor} : {},
+        bgColor ? { backgroundColor: bgColor } : {},
       ]}>
+      {icon && <Icon name={icon} style={{marginRight: 15, fontSize: 22, color: fgColor}}/>}
       <Text
         style={[
           styles.text,
           styles[`text_${type}`],
-          fgColor ? {color: fgColor} : {},
+          fgColor ? { color: fgColor } : {},
         ]}>
         {text}
       </Text>
@@ -28,7 +31,8 @@ const styles = StyleSheet.create({
 
     padding: 15,
     marginVertical: 5,
-
+    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
   },
