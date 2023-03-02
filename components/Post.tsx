@@ -34,7 +34,7 @@ const Post = ({ userId, image = pic, text, post }: any) => {
             getUser();
             console.log(post);
             
-    }, [])
+    }, [post])
 
     return (
         <View style={styles.container}>

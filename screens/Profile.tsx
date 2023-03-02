@@ -6,6 +6,7 @@ import { UserContext } from "../components/UserContext";
 import { create } from "apisauce";
 import { IP } from "../ip";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 const Profile = () => {
     const { userInfo }: any = React.useContext(UserContext)
@@ -32,11 +33,14 @@ const Profile = () => {
             console.log('fail get posts by id ' + err);
         }
     }
-    useEffect(() => {
+    const getUser = async () => {
+        const currentUser = await axios.get(`http://${IP}:3000/user/${userInfo.id}`, {headers:{Authorization: `JWT ${userInfo.accessToken}`}})
+        setUser(currentUser.data)
+    }
+     useEffect(() => {
         const unsuscribe = navigation.addListener('focus', async () => {
-            const userFromStorage = await AsyncStorage.getItem('userInfo')
-            userFromStorage && setUser(JSON.parse(userFromStorage))
-            getPosts();
+            await getUser();
+            await getPosts();
         })
         return unsuscribe
     })
@@ -56,8 +60,8 @@ const Profile = () => {
                     </View>
                 </View>
                 <Text style={styles.title}>Publications</Text>
-                {posts?.map((item: { message: any; photo: any; }) => (
-                    <Post key={item.message} userId={user.id} image={item.photo} text={item.message} post={item} />
+                {posts?.map((item) => (
+                    <Post key={item._id} userId={user._id} image={item.photo} text={item.message} post={item} />
                 ))}
             </ScrollView>
         </View>
